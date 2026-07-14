@@ -14,6 +14,7 @@ const schema = Schema([
   Table('user_lists', [
     Column.text('user_id'),
     Column.text('name'),
+    Column.text('category'),
     Column.text('created_at'),
   ]),
   Table('list_entries', [

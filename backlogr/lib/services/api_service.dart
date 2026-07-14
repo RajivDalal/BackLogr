@@ -7,7 +7,7 @@ class ApiService {
   final _uuid = const Uuid();
 
   // Stub for searching media across platforms
-  Future<List<MediaItem>> searchMedia(String query) async {
+  Future<List<MediaItem>> searchMedia(String query, {String? category}) async {
     // In a real implementation, this would call TMDB, IGDB, AniList, etc.
     // depending on the search configuration.
     
@@ -17,7 +17,7 @@ class ApiService {
     // Returning mock data for v1 demonstration
     if (query.trim().isEmpty) return [];
 
-    return [
+    final mockData = [
       MediaItem(
         id: _uuid.v4(),
         title: 'Mock Movie: $query',
@@ -49,5 +49,19 @@ class ApiService {
         author: 'Margaret Atwood',
       ),
     ];
+
+    if (category == null) return mockData;
+
+    final targetType = switch (category) {
+      'Games' => 'game',
+      'Movies' => 'movie',
+      'Books' => 'book',
+      'Shows' => 'show',
+      'Anime' => 'anime',
+      'Manga' => 'manga',
+      _ => 'media'
+    };
+
+    return mockData.where((item) => item.type == targetType).toList();
   }
 }

@@ -19,16 +19,34 @@ class MediaRepository {
         .map((rows) => rows.map((r) => UserList.fromMap(r)).toList());
   }
 
-  Future<void> createList(String userId, String name) async {
+  Future<void> createList(String userId, String name, String category) async {
     final id = _uuid.v4();
     final createdAt = DateTime.now().toIso8601String();
     await db.execute(
       '''
-      INSERT INTO user_lists (id, user_id, name, created_at)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO user_lists (id, user_id, name, category, created_at)
+      VALUES (?, ?, ?, ?, ?)
       ''',
-      [id, userId, name, createdAt],
+      [id, userId, name, category, createdAt],
     );
+  }
+
+  Future<void> updateList(String listId, String newName, String newCategory) async {
+    await db.execute(
+      '''
+      UPDATE user_lists 
+      SET name = ?, category = ?
+      WHERE id = ?
+      ''',
+      [newName, newCategory, listId],
+    );
+  }
+
+  Future<void> deleteList(String listId) async {
+    // Delete the list itself
+    await db.execute('DELETE FROM user_lists WHERE id = ?', [listId]);
+    // Optionally delete all entries inside the list
+    await db.execute('DELETE FROM list_entries WHERE list_id = ?', [listId]);
   }
 
   // Returns joined data between list_entries and media_items

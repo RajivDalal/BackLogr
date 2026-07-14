@@ -29,6 +29,7 @@ class ListDetailScreen extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => AddMediaScreen(
                     listId: userList.id,
+                    category: userList.category,
                     repository: repository,
                   ),
                 ),
@@ -65,6 +66,7 @@ class ListDetailScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => AddMediaScreen(
                             listId: userList.id,
+                            category: userList.category,
                             repository: repository,
                           ),
                         ),
@@ -173,6 +175,7 @@ class ListDetailScreen extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => AddMediaScreen(
                 listId: userList.id,
+                category: userList.category,
                 repository: repository,
               ),
             ),

@@ -6,11 +6,13 @@ import '../services/api_service.dart';
 
 class AddMediaScreen extends StatefulWidget {
   final String listId;
+  final String category;
   final MediaRepository repository;
 
   const AddMediaScreen({
     super.key,
     required this.listId,
+    required this.category,
     required this.repository,
   });
 
@@ -34,7 +36,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
     });
 
     try {
-      final results = await _apiService.searchMedia(query);
+      final results = await _apiService.searchMedia(query, category: widget.category);
       if (mounted) {
         setState(() {
           _searchResults = results;
@@ -85,7 +87,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Search for movies, games, books...',
+                labelText: 'Search for ${widget.category}...',
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: _performSearch,
