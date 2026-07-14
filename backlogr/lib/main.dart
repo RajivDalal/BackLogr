@@ -6,7 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'database/schema.dart';
 import 'database/supabase_connector.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'debug_screen.dart';
+import 'screens/auth_screen.dart';
+import 'screens/home_screen.dart';
 
 // Global reference to the database to use anywhere in your app
 late final PowerSyncDatabase db;
@@ -44,7 +45,39 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BackLogr',
-      home: const DebugScreen(),
+      theme: ThemeData.dark().copyWith(
+        primaryColor: Colors.blueAccent,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blueAccent,
+          brightness: Brightness.dark,
+        ),
+      ),
+      home: const AuthWrapper(),
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<AuthState>(
+      stream: Supabase.instance.client.auth.onAuthStateChange,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final session = snapshot.data?.session;
+        if (session != null) {
+          return const HomeScreen();
+        }
+
+        return const AuthScreen();
+      },
     );
   }
 }

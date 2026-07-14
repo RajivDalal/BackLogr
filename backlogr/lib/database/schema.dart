@@ -15,6 +15,7 @@ const schema = Schema([
     Column.text('created_at'),
   ]),
   Table('list_entries', [
+    Column.text('user_id'),
     Column.text('list_id'),
     Column.text('media_id'),
     Column.integer('progress'),
