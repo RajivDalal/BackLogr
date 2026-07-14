@@ -36,7 +36,7 @@ class MediaRepository {
     return db
         .watch(
           '''
-      SELECT e.*, m.title, m.type, m.poster_url, m.release_date
+      SELECT e.*, m.title, m.type, m.poster_url, m.release_date, m.description, m.author
       FROM list_entries e
       JOIN media_items m ON e.media_id = m.id
       WHERE e.list_id = ?
@@ -59,8 +59,8 @@ class MediaRepository {
     if (existing.isEmpty) {
       await db.execute(
         '''
-        INSERT INTO media_items (id, title, type, external_id, poster_url, release_date)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO media_items (id, title, type, external_id, poster_url, release_date, description, author)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''',
         [
           item.id,
@@ -69,16 +69,18 @@ class MediaRepository {
           item.externalId,
           item.posterUrl,
           item.releaseDate,
+          item.description,
+          item.author,
         ],
       );
     } else {
       await db.execute(
         '''
         UPDATE media_items
-        SET title = ?, poster_url = ?
+        SET title = ?, poster_url = ?, description = ?, author = ?
         WHERE id = ?
         ''',
-        [item.title, item.posterUrl, item.id],
+        [item.title, item.posterUrl, item.description, item.author, item.id],
       );
     }
 

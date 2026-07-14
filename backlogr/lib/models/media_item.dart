@@ -5,6 +5,8 @@ class MediaItem {
   final String? externalId;
   final String? posterUrl;
   final String? releaseDate;
+  final String? description;
+  final String? author;
 
   MediaItem({
     required this.id,
@@ -13,6 +15,8 @@ class MediaItem {
     this.externalId,
     this.posterUrl,
     this.releaseDate,
+    this.description,
+    this.author,
   });
 
   factory MediaItem.fromMap(Map<String, dynamic> map) {
@@ -23,6 +27,8 @@ class MediaItem {
       externalId: map['external_id'] as String?,
       posterUrl: map['poster_url'] as String?,
       releaseDate: map['release_date'] as String?,
+      description: map['description'] as String?,
+      author: map['author'] as String?,
     );
   }
 
@@ -34,6 +40,8 @@ class MediaItem {
       'external_id': externalId,
       'poster_url': posterUrl,
       'release_date': releaseDate,
+      'description': description,
+      'author': author,
     };
   }
 }

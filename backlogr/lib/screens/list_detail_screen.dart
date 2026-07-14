@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/user_list.dart';
 import '../repositories/media_repository.dart';
+import '../widgets/media_detail_popup.dart';
 import 'add_media_screen.dart';
 
 class ListDetailScreen extends StatelessWidget {
@@ -76,38 +77,87 @@ class ListDetailScreen extends StatelessWidget {
             );
           }
 
-          return ListView.builder(
+          return GridView.builder(
+            padding: const EdgeInsets.all(12),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 140, // 3 columns on phone, more on wider screens
+              childAspectRatio: 0.55, // Adjusted to fit poster and text below
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 16,
+            ),
             itemCount: entries.length,
             itemBuilder: (context, index) {
               final entry = entries[index];
-              return ListTile(
-                leading: entry['poster_url'] != null
-                    ? Image.network(
-                        entry['poster_url'] as String,
-                        width: 50,
-                        height: 75,
-                        fit: BoxFit.cover,
-                        errorBuilder: (ctx, err, stack) => const Icon(Icons.image_not_supported),
-                      )
-                    : const Icon(Icons.image, size: 50),
-                title: Text(entry['title'] as String),
-                subtitle: Text('${entry['type']} • Status: ${entry['status']}'),
-                trailing: PopupMenuButton<String>(
-                  onSelected: (value) {
-                    if (value == 'remove') {
-                      repository.removeMediaFromList(entry['id'] as String);
-                    } else if (value == 'complete') {
-                      repository.updateListEntry(entry['id'] as String, status: 'Completed');
-                    }
-                  },
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'complete',
-                      child: Text('Mark as Completed'),
+              return GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => MediaDetailPopup(
+                      entry: entry,
+                      repository: repository,
                     ),
-                    const PopupMenuItem(
-                      value: 'remove',
-                      child: Text('Remove from list'),
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Card(
+                            clipBehavior: Clip.antiAlias,
+                            elevation: 4,
+                            margin: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            child: entry['poster_url'] != null
+                                ? Image.network(
+                                    entry['poster_url'] as String,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (ctx, err, stack) => const Icon(Icons.image_not_supported),
+                                  )
+                                : const Icon(Icons.image, size: 50),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      entry['title'] as String,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        if (entry['status'] == 'Completed') ...[
+                          const Icon(Icons.check_circle, size: 14, color: Colors.blueAccent),
+                          const SizedBox(width: 4),
+                        ] else ...[
+                          const Icon(Icons.add_circle, size: 14, color: Colors.grey),
+                          const SizedBox(width: 4),
+                        ],
+                        Expanded(
+                          child: Text(
+                            entry['release_date'] != null && entry['release_date'].toString().length >= 4 
+                                ? entry['release_date'].toString().substring(0, 4) 
+                                : entry['type'],
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

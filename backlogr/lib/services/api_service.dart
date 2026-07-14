@@ -25,6 +25,8 @@ class ApiService {
         externalId: 'mock-123',
         posterUrl: 'https://via.placeholder.com/300x450.png?text=Movie',
         releaseDate: '2026-01-01',
+        description: 'A thrilling mock movie where things happen and the hero saves the day. Truly a masterpiece of placeholder cinema.',
+        author: 'John Director',
       ),
       MediaItem(
         id: _uuid.v4(),
@@ -33,6 +35,8 @@ class ApiService {
         externalId: 'mock-456',
         posterUrl: 'https://via.placeholder.com/300x450.png?text=Game',
         releaseDate: '2026-02-01',
+        description: 'An interactive experience with amazing graphics and an immersive storyline.',
+        author: 'GameStudio',
       ),
       MediaItem(
         id: _uuid.v4(),
@@ -40,7 +44,9 @@ class ApiService {
         type: 'book',
         externalId: 'mock-789',
         posterUrl: 'https://via.placeholder.com/300x450.png?text=Book',
-        releaseDate: '2026-03-01',
+        releaseDate: '2019',
+        description: 'When the van door slammed on Offred\'s future at the end of The Handmaid\'s Tale, readers had no way of telling what lay ahead for her--freedom, prison or death.',
+        author: 'Margaret Atwood',
       ),
     ];
   }

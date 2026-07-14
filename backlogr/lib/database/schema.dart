@@ -8,6 +8,8 @@ const schema = Schema([
     Column.text('external_id'),
     Column.text('poster_url'),
     Column.text('release_date'),
+    Column.text('description'),
+    Column.text('author'),
   ]),
   Table('user_lists', [
     Column.text('user_id'),
